@@ -31,7 +31,8 @@ jobs:
       - name: Build ANGLE
         run: |
           git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          export PATH=${pwd}/depot_tools:$PATH
+          export PATH=./depot_tools:$PATH
+          echo $PATH
           cd angle
           vpython scripts/bootstrap.py
           gclient sync
