@@ -46,5 +46,5 @@ jobs:
         with:
           name: angle-libs
           path: |
-            angle/out/Android/libGLES_angle.so
+            angle/out/Android/libGLESv2_angle.so
             angle/out/Android/libEGL_angle.so
