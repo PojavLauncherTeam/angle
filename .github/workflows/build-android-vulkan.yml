@@ -41,7 +41,7 @@ jobs:
           cat out/Android/args.gn
           autoninja -C out/Android
 
-       - name: Upload ANGLE
+      - name: Upload ANGLE
          uses: actions/upload-artifact@v2
          with:
            name: angle-libs
