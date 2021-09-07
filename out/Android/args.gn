@@ -1,0 +1,6 @@
+target_os = "android"
+target_cpu = "arm64"
+angle_enable_vulkan = true
+angle_enable_essl = true
+engle_enable_glsl = true
+is_component_build = false
