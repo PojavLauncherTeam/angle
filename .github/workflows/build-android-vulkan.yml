@@ -36,8 +36,6 @@ jobs:
           echo $PATH
           cd angle
           vpython scripts/bootstrap.py
-          cat .gclient
-          exit 1
           gclient sync
           gn gen out/Android
           autoninja -C out/Android
