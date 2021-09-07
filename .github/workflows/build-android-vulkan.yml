@@ -38,4 +38,5 @@ jobs:
           vpython scripts/bootstrap.py
           gclient sync
           gn gen out/Android
+          cat out/Android/args.gn
           autoninja -C out/Android
