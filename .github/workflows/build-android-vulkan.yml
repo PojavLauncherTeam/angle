@@ -40,6 +40,7 @@ jobs:
           gn gen out/Android
           cat out/Android/args.gn
           autoninja -C out/Android
+
        - name: Upload ANGLE
          uses: actions/upload-artifact@v2
          with:
