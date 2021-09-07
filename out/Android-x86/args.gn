@@ -25,8 +25,8 @@ angle_enable_metal = false
 angle_enable_swiftshader = false
 
 # Disable all shader translator targets except desktop GL (for Vulkan)
-angle_enable_essl = false
-angle_enable_glsl = false
+angle_enable_essl = true
+angle_enable_glsl = true
 angle_enable_hlsl = false
 
 #angle_enable_commit_id = false
