@@ -42,9 +42,9 @@ jobs:
           autoninja -C out/Android
 
       - name: Upload ANGLE
-         uses: actions/upload-artifact@v2
-         with:
-           name: angle-libs
-           path: |
-             angle/out/Android/libGLES_angle.so
-             angle/out/Android/libEGL_angle.so
+        uses: actions/upload-artifact@v2
+        with:
+          name: angle-libs
+          path: |
+            angle/out/Android/libGLES_angle.so
+            angle/out/Android/libEGL_angle.so
