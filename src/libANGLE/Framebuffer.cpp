@@ -678,8 +678,9 @@ const FramebufferAttachment *FramebufferState::getDrawBuffer(size_t drawBufferId
     {
         // ES3 spec: "If the GL is bound to a draw framebuffer object, the ith buffer listed in bufs
         // must be COLOR_ATTACHMENTi or NONE"
-        ASSERT(mDrawBufferStates[drawBufferIdx] == GL_COLOR_ATTACHMENT0 + drawBufferIdx ||
-               (drawBufferIdx == 0 && mDrawBufferStates[drawBufferIdx] == GL_BACK));
+        // Hack(Pojav): using desktop GL, skip this check
+        //ASSERT(mDrawBufferStates[drawBufferIdx] == GL_COLOR_ATTACHMENT0 + drawBufferIdx ||
+        //       (drawBufferIdx == 0 && mDrawBufferStates[drawBufferIdx] == GL_BACK));
 
         if (mDrawBufferStates[drawBufferIdx] == GL_BACK)
         {

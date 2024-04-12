@@ -641,6 +641,10 @@ class TParseContext : angle::NonCopyable
                                 const ImmutableString &token,
                                 TType *arrayType);
 
+    void addImplicitIntToFloat(TOperator op,
+                               TIntermTyped **leftPtr,
+                               TIntermTyped **rightPtr,
+                               const TSourceLoc &loc);
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,
                                         TIntermTyped *right,

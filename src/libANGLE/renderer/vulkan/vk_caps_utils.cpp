@@ -1314,7 +1314,7 @@ egl::Config GenerateDefaultConfig(DisplayVk *display,
     config.bindToTextureRGBA  = colorFormat.format == GL_RGBA || colorFormat.format == GL_BGRA_EXT;
     config.colorBufferType    = EGL_RGB_BUFFER;
     config.configCaveat       = GetConfigCaveat(colorFormat.internalFormat);
-    config.conformant         = es1Support | es2Support | es3Support;
+    config.conformant         = es1Support | es2Support | es3Support | desktopSupport;
     config.depthSize          = depthStencilFormat.depthBits;
     config.stencilSize        = depthStencilFormat.stencilBits;
     config.level              = 0;

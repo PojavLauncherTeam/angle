@@ -453,7 +453,7 @@ gl::Version DisplayMtl::getMaxConformantESVersion() const
 
 Optional<gl::Version> DisplayMtl::getMaxSupportedDesktopVersion() const
 {
-    return Optional<gl::Version>::Invalid();
+    return gl::Version(3, 3);
 }
 
 EGLSyncImpl *DisplayMtl::createSync()
@@ -589,7 +589,7 @@ egl::ConfigSet DisplayMtl::generateConfigs()
 
     config.renderTargetFormat = GL_RGBA8;
 
-    config.conformant     = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
+    config.conformant     = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0) | EGL_OPENGL_BIT;
     config.renderableType = config.conformant;
 
     config.matchNativePixmap = EGL_NONE;
@@ -850,6 +850,7 @@ void DisplayMtl::ensureCapsInitialized() const
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
     // support is the max buffer range divided by the size of a single uniform (4X float).
     mNativeCaps.maxVertexUniformVectors                              = maxDefaultUniformVectors;
+    mNativeCaps.maxUniformLocations = maxDefaultUniformVectors;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxDefaultUniformComponents;
     mNativeCaps.maxFragmentUniformVectors                            = maxDefaultUniformVectors;
     mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxDefaultUniformComponents;
@@ -901,7 +902,8 @@ void DisplayMtl::ensureCapsInitialized() const
         mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
     }
 
-    mNativeCaps.maxCombinedShaderOutputResources = 0;
+    // FIXME(Pojav): need to calculate this correctly
+    mNativeCaps.maxCombinedShaderOutputResources = mtl::kMaxShaderBuffers + mtl::kMaxShaderSamplers;
 
     mNativeCaps.maxTransformFeedbackInterleavedComponents =
         gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS;
@@ -958,6 +960,12 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.stencilTexturingANGLE         = true;
     mNativeExtensions.copyTextureCHROMIUM           = true;
     mNativeExtensions.copyCompressedTextureCHROMIUM = false;
+
+    // Hack(Pojav): enable more stuff
+    mNativeExtensions.getImageANGLE = true;
+
+    // Hack(Pojav): enable shader non-constant global init
+    mNativeExtensions.shaderNonConstantGlobalInitializersEXT = true;
 
 #if !ANGLE_PLATFORM_WATCHOS
     if (@available(iOS 14.0, macOS 10.11, macCatalyst 14.0, tvOS 16.0, *))

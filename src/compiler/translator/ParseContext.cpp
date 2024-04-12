@@ -2795,6 +2795,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
                            TExtension::EXT_shader_non_constant_global_initializers);
     bool globalInitWarning = false;
     if (symbolTable.atGlobalLevel() &&
+        !sh::IsDesktopGLSpec(mShaderSpec) && // Hack(Pojav): skip check
         !ValidateGlobalInitializer(initializer, mShaderVersion, sh::IsWebGLBasedSpec(mShaderSpec),
                                    nonConstGlobalInitializers, &globalInitWarning))
     {
@@ -7029,6 +7030,46 @@ bool TParseContext::isMultiplicationTypeCombinationValid(TOperator op,
     }
 }
 
+// Pojav: handler for int->float implicit conversions
+void TParseContext::addImplicitIntToFloat(TOperator op,
+                                          TIntermTyped **leftPtr,
+                                          TIntermTyped **rightPtr,
+                                          const TSourceLoc &loc)
+{
+    TIntermTyped *left = *leftPtr;
+    TIntermTyped *right = *rightPtr;
+    ImplicitTypeConversion conversion = GetConversion(left->getBasicType(), right->getBasicType());
+    switch (conversion)
+    {
+        case ImplicitTypeConversion::Left:
+        {
+            //warning(loc, "implicit conversion left is int", GetOperatorString(op));
+            markStaticReadIfSymbol(left);
+            TIntermSequence arguments = { left->deepCopy() }; // FIXME: need deepCopy?
+            TType type = left->getType();
+            type.setBasicType(EbtFloat);
+            TIntermAggregate *converted = TIntermAggregate::CreateConstructor(type, &arguments);
+            converted->setLine(loc);
+            *leftPtr = converted;
+            return;
+        }
+        case ImplicitTypeConversion::Right:
+        {
+            //warning(loc, "implicit conversion right is int", GetOperatorString(op));
+            markStaticReadIfSymbol(right);
+            TIntermSequence arguments = { right->deepCopy() }; // FIXME: need deepCopy?
+            TType type = right->getType();
+            type.setBasicType(EbtFloat);
+            TIntermAggregate *converted = TIntermAggregate::CreateConstructor(type, &arguments);
+            converted->setLine(loc);
+            *rightPtr = converted;
+            return;
+        }
+        default:
+            return;
+    }
+}
+
 TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
                                                    TIntermTyped *left,
                                                    TIntermTyped *right,
@@ -7091,6 +7132,7 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
         }
     }
 
+    addImplicitIntToFloat(op, &left, &right, loc);
     TIntermBinary *node = new TIntermBinary(op, left, right);
     ASSERT(op != EOpAssign);
     markStaticReadIfSymbol(left);
@@ -7145,6 +7187,7 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
             checkTCSOutVarIndexIsValid(lValue, loc);
         }
 
+        addImplicitIntToFloat(op, &left, &right, loc);
         if (op == EOpMulAssign)
         {
             op = TIntermBinary::GetMulAssignOpBasedOnOperands(left->getType(), right->getType());
@@ -7599,7 +7642,8 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
         TIntermTyped *typedArgument        = arguments[i]->getAsTyped();
         const TType &functionArgumentType  = typedArgument->getType();
         const TType &functionParameterType = functionDefinition->getParam(i)->getType();
-        ASSERT(functionArgumentType.getBasicType() == functionParameterType.getBasicType());
+        // Hack(Pojav): implicit conv
+        //ASSERT(functionArgumentType.getBasicType() == functionParameterType.getBasicType());
 
         if (IsImage(functionArgumentType.getBasicType()))
         {

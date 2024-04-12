@@ -44,7 +44,8 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
                              TSymbolTable *symbolTable)
 {
     // SeparateDeclarations should have already been run.
-    ASSERT(declaration->getSequence()->size() == 1);
+    // Hack(Pojav): skip this check
+    //ASSERT(declaration->getSequence()->size() == 1);
 
     TIntermNode *declarator = declaration->getSequence()->back();
     TIntermBinary *init     = declarator->getAsBinaryNode();

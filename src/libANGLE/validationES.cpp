@@ -5300,8 +5300,9 @@ bool ValidateDrawBuffersBase(const Context *context,
         {
             // INVALID_OPERATION-GL is bound to buffer and ith argument
             // is not COLOR_ATTACHMENTi or NONE
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidDrawBufferValue);
-            return false;
+            // Hack(Pojav): using Desktop GL, skip this check
+            //ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidDrawBufferValue);
+            //return false;
         }
     }
 

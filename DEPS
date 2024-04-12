@@ -917,10 +917,10 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
-  'third_party/SwiftShader': {
-    'url': Var('swiftshader_git') + '/SwiftShader@62c59c41e194c288c06739788bb0aad3c86b19bf',
-    'condition': 'not build_with_chromium',
-  },
+  #'third_party/SwiftShader': {
+  #  'url': Var('swiftshader_git') + '/SwiftShader@62c59c41e194c288c06739788bb0aad3c86b19bf',
+  #  'condition': 'not build_with_chromium',
+  #},
 
   'third_party/turbine': {
       'packages': [
@@ -933,9 +933,9 @@ deps = {
       'dep_type': 'cipd',
   },
 
-  'third_party/VK-GL-CTS/src': {
-    'url': Var('chromium_git') + '/external/github.com/KhronosGroup/VK-GL-CTS' + '@' + Var('vk_gl_cts_revision'),
-  },
+  #'third_party/VK-GL-CTS/src': {
+  #  'url': Var('chromium_git') + '/external/github.com/KhronosGroup/VK-GL-CTS' + '@' + Var('vk_gl_cts_revision'),
+  #},
 
   'third_party/vulkan-deps': {
     'url': Var('chromium_git') + '/vulkan-deps@3ba43743089e09f074f4aa7f2bac681d3c13e70b',
